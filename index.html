@@ -1,1 +1,45 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro Vendas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Registrar Funcionário</h1>
+        <form id="formulario">
+            <!--Caixa de Entrada que receberá uma informação do tipo texto (type="text"), salvará a informação enviada na variável "nome" (name=) criada no JS, apresentará uma dica (placeholder) ao usuário e por fim tornará o campo obrigatório (required)-->
+            <input type="text" name="nome" placeholder="Nome do Funcionário" required>
+            <input type="number" placeholder="Total de Vendas" step="0.01" required>
+            <input type="number" placeholder="Meta" step="0.01" required>
+            <!-- Step se refere ao Nº decima especificando a qtde de casas-->
+             <button type="submit">Salvar</button><!--Envia as Informações-->
+        </form>
+        <!--Criando o espaço onde as informações irão aparecer-->
+        <div class="resultado" id="resultado"></div>
+        <!--Criando o espaço onde o histórico irá aparecer-->
+        <button class="botao-secundario" onclick="">Histórico</button>
+        <div class="historico" id="historico"></div>
+    </div>
+    <!--Inserindo internamente o JS:-->
+    <script>
+        //Criar Três Variáveis
+        var formulario = document.getElementById('formulario')//Captura o formulário do html
+        var resultadoDiv = document.getElementById('resultado')//Representa a div onde o resultado será mostrado
+        var historicoDiv = document.getElementById('historico')//Representa a div onde será exibida
+        var historico = JSON.parse(localStorage.getItem('vendas')) || [];//Verifica se existe algo no localStorage, caso não exista, inicia como vazio
+        formulario.addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o envio do formulário
+            var nome = formulario.nome.value; // Captura o valor do campo nome
+            var vendas = parseFloat(formulario[1].value); // Captura o valor do campo vendas
+            var meta = parseFloat(formulario[2].value); // Captura o valor do campo meta
+            var resultado = calcularResultado(vendas, meta); // Chama a função para calcular o resultado
+            resultadoDiv.innerHTML = `<p>${nome}: ${resultado}</p>`; // Exibe o resultado na div
+            historico.push({ nome: nome, vendas: vendas, meta: meta, resultado: resultado }); // Adiciona ao histórico
+            localStorage.setItem('vendas', JSON.stringify(historico)); // Salva no localStorage
+        });
+    </script>
+</body>
+</html>
